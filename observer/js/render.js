@@ -82,8 +82,6 @@ for (let i = 0; i < 15; i++) {
     PLAYER_COLORS.push(`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`);
 }
 
-console.log(PLAYER_COLORS)
-
 class Renderer {
     constructor() {
         var width = window.innerWidth;
