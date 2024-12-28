@@ -102,6 +102,7 @@ class Renderer {
         this.mapLayer.add(this.itemGroup)
         this.shootingGroup = new Konva.Group()
         this.mapLayer.add(this.shootingGroup)
+        this.followPlayer = null
 
         this.canvas.add(this.mapLayer)
         this.canvas.add(this.scoreboardLayer)
@@ -169,7 +170,7 @@ class Renderer {
                 fontSize: 16,
                 fontStyle: "bold",
                 fontFamily: 'Arial',
-                fill: 'white',
+                fill: this.followPlayer === players[i].name ? "red" : 'white',
             });
             group.add(name)
 
@@ -199,6 +200,27 @@ class Renderer {
             if (players[i].health <= 0) {
                 group.opacity(0.1)
             }
+
+            // on click on player name, follow player (or unfollow if already following)
+            group.on("click", (g) => {
+                console.log("click")
+                if (this.followPlayer === players[i].name) {
+                    this.followPlayer = null
+                    name.fill("white")
+                } else {
+                    this.followPlayer = players[i].name
+                    // pan to player - also zoom in a bit
+                    let s = this.mapLayer.scaleX()
+                    let x = this.canvas.width()/2 - players[i].x * s
+                    let y = this.canvas.height()/2 - players[i].y * s
+                    this.mapLayer.x(x)
+                    this.mapLayer.y(y)
+                    this.mapLayer.scaleX(1);
+                    this.mapLayer.scaleY(1);
+                    // color player name red
+                    name.fill("red")
+                }
+            })
 
             playersGroup.add(group)
         }
@@ -387,6 +409,14 @@ class Renderer {
         let centerY = (yPositions[yPositions.length - 1] + yPositions[0]) / 2
 
         let s = Math.min(this.canvas.width() / width, this.canvas.height() / height)
+        if (this.followPlayer) {
+            let player = frame.players.find(p => p.name === this.followPlayer)
+            if (player) {
+                centerX = player.x
+                centerY = player.y
+            }
+            s = 1;
+        }
         new Konva.Tween({
             node: this.mapLayer,
             duration: game.frameSpeed / 1000,
