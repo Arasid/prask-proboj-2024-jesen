@@ -103,6 +103,7 @@ class Renderer {
         this.shootingGroup = new Konva.Group()
         this.mapLayer.add(this.shootingGroup)
         this.followPlayer = null
+        this.showScoreboard = true
 
         this.canvas.add(this.mapLayer)
         this.canvas.add(this.scoreboardLayer)
@@ -127,7 +128,7 @@ class Renderer {
         let label = new Konva.Text({
             x: 0,
             y: 0,
-            text: "Hide",
+            text: this.showScoreboard ? "Hide" : "Show",
             fontSize: 16,
             fontStyle: "bold",
             fontFamily: 'Arial',
@@ -139,7 +140,7 @@ class Renderer {
         this.scoreboardLayer.add(button)
 
 
-        const playersGroup = new Konva.Group();
+        const playersGroup = new Konva.Group({ opacity: this.showScoreboard ? 1 : 0 })
         players.sort((a, b) => b.score - a.score)
         for (let i = 0; i < players.length; i++) {
             let group = new Konva.Group()
@@ -205,8 +206,9 @@ class Renderer {
         }
         this.scoreboardLayer.add(playersGroup)
         const buttonClick = () => {
-            playersGroup.opacity(playersGroup.opacity() === 0 ? 1 : 0)
-            label.text(playersGroup.opacity() === 0 ? "Show" : "Hide")
+            this.showScoreboard = !this.showScoreboard
+            playersGroup.opacity(this.showScoreboard ? 1 : 0)
+            label.text(this.showScoreboard ? "Hide" : "Show")
         };
         button.on("click", buttonClick)
         button.on("tap", buttonClick)
