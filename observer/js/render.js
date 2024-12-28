@@ -247,7 +247,7 @@ class Renderer {
 
             let name = new Konva.Text({
                 x: 0,
-                y: -26,
+                y: -16,
                 text: player.name,
                 fontSize: 10,
                 fontStyle: "bold",
@@ -278,18 +278,18 @@ class Renderer {
             group.add(circle)
             group.add(name)
 
-            let capImg = new Image();
-            capImg.onload = function () {
-                var cap = new Konva.Image({
-                    x: -5,
-                    y: -15,
-                    image: capImg,
-                    width: 15,
-                    height: 12
-                })
-                group.add(cap)
-            }
-            capImg.src = 'christmas-cap.png'
+            // let capImg = new Image();
+            // capImg.onload = function () {
+            //     var cap = new Konva.Image({
+            //         x: -5,
+            //         y: -15,
+            //         image: capImg,
+            //         width: 15,
+            //         height: 12
+            //     })
+            //     group.add(cap)
+            // }
+            // capImg.src = 'christmas-cap.png'
 
 
 
