@@ -201,34 +201,54 @@ class Renderer {
                 group.opacity(0.1)
             }
 
-            // on click on player name, follow player (or unfollow if already following)
-            group.on("click", (g) => {
-                console.log("click")
-                if (this.followPlayer === players[i].name) {
-                    this.followPlayer = null
-                    name.fill("white")
-                } else {
-                    this.followPlayer = players[i].name
-                    // pan to player - also zoom in a bit
-                    let s = this.mapLayer.scaleX()
-                    let x = this.canvas.width()/2 - players[i].x * s
-                    let y = this.canvas.height()/2 - players[i].y * s
-                    this.mapLayer.x(x)
-                    this.mapLayer.y(y)
-                    this.mapLayer.scaleX(1);
-                    this.mapLayer.scaleY(1);
-                    // color player name red
-                    name.fill("red")
-                }
-            })
-
             playersGroup.add(group)
         }
         this.scoreboardLayer.add(playersGroup)
-        button.on("click", () => {
+        const buttonClick = () => {
             playersGroup.opacity(playersGroup.opacity() === 0 ? 1 : 0)
             label.text(playersGroup.opacity() === 0 ? "Show" : "Hide")
-        })
+        };
+        button.on("click", buttonClick)
+        button.on("tap", buttonClick)
+
+
+        // on click on player name, follow player (or unfollow if already following)
+        const groupClick = (player, group) => {
+            const name = group.children[2];
+            if (this.followPlayer === player.name) {
+                this.followPlayer = null
+                name.fill("white")
+            } else {
+                if (this.followPlayer) {
+                    // unfollow player
+                    let prevPlayer = players.find(p => p.name === this.followPlayer)
+                    if (prevPlayer) {
+                        let prevGroup = playersGroup.children.find(g => g.children[2].text() === prevPlayer.name)
+                        if (prevGroup) {
+                            let prevName = prevGroup.children[2]
+                            prevName.fill("white")
+                        }
+                    }
+                }
+                this.followPlayer = player.name
+                // pan to player - also zoom in a bit
+                let s = this.mapLayer.scaleX()
+                let x = this.canvas.width()/2 - player.x * s
+                let y = this.canvas.height()/2 - player.y * s
+                this.mapLayer.x(x)
+                this.mapLayer.y(y)
+                this.mapLayer.scaleX(1);
+                this.mapLayer.scaleY(1);
+                // color player name red
+                name.fill("red")
+            }
+        }
+
+        for (let i = 0; i < players.length; i++) {
+            let group = playersGroup.children[i]
+            group.on("click", () => groupClick(players[i], group))
+            group.on("tap", () => groupClick(players[i], group))
+        }
     }
 
     /** @type {Map} map */
