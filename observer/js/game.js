@@ -57,6 +57,16 @@ class Game {
         })
     }
 
+    loadByGameId(game_id) {
+        // https://proboj.ksp.sk/uploads/matches/97189/observer.gz
+        fetch(`https://corsproxy.io/?url=https://proboj.ksp.sk/uploads/matches/${game_id}/observer.gz`)
+          .then(res => res.blob())
+          .then(blob => blob.arrayBuffer())
+          .then(data => {
+              this.loadGzip(data)
+          })
+    }
+
     loadFile(form) {
         form.files[0].arrayBuffer().then(data => {
             this.loadGzip(data)

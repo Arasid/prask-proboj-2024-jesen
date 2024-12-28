@@ -7,6 +7,11 @@ if (urlParams.has("file")) {
     game.loadUrl(urlParams.get("file"))
 }
 
+if (urlParams.has("game_id")) {
+    document.getElementById("js-file").style.display = "none"
+    game.loadByGameId(urlParams.get("game_id"))
+}
+
 document.getElementById("js-speed").addEventListener("change", (e) => {
     game.frameSpeed = parseInt(e.target.value)
 })
