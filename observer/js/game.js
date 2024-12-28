@@ -49,12 +49,12 @@ class Game {
 
     /** @type {string} url */
     loadUrl(url) {
-        fetch(url)
-            .then(res => res.blob())
-            .then(blob => blob.arrayBuffer())
-            .then(data => {
-                this.loadGzip(data)
-            })
+      fetch("https://corsproxy.io/?url=" + url)
+        .then(res => res.blob())
+        .then(blob => blob.arrayBuffer())
+        .then(data => {
+          this.loadGzip(data)
+        })
     }
 
     loadFile(form) {
