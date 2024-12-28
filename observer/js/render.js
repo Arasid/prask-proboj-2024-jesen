@@ -275,6 +275,17 @@ class Renderer {
         }
     }
 
+    pan(x, y) {
+        this.mapLayer.x(this.mapLayer.x() + x)
+        this.mapLayer.y(this.mapLayer.y() + y)
+    }
+
+    zoom(factor) {
+        let s = this.mapLayer.scaleX() * factor
+        this.mapLayer.scaleX(s)
+        this.mapLayer.scaleY(s)
+    }
+
     /** @type {Frame} frame */
     render(frame) {
         this.mapBorder.radius(frame.radius)
