@@ -370,12 +370,34 @@ class Renderer {
     renderItems(items) {
         this.itemGroup.removeChildren()
         for (const item of items) {
-            let i = new Konva.Circle({
-                x: item.x,
-                y: item.y,
-                radius: 3,
-                fill: item.type === 0 ? "yellow" : "cyan",
-            })
+            let i;
+            if (item.type === 1) {
+                i = new Konva.Circle({
+                    x: item.x,
+                    y: item.y,
+                    radius: 3,
+                    fill: "cyan",
+                })
+            } else {
+                i = new Konva.RegularPolygon({
+                    x: item.x,
+                    y: item.y,
+                    sides: 2 + item.weapon,
+                    radius: 3,
+                    fill: "yellow",
+                })
+                let text = new Konva.Text({
+                    x: item.x - 3,
+                    y: item.y - 16,
+                    text: ["", "K", "P", "T"][item.weapon],
+                    fontSize: 12,
+                    fontStyle: "bold",
+                    fontFamily: 'Arial',
+                    fill: 'white',
+                    opacity: 0.5,
+                });
+                this.itemGroup.add(text)
+            }
             this.itemGroup.add(i)
         }
     }
