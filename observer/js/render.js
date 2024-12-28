@@ -82,10 +82,36 @@ class Renderer {
         this.scoreboardLayer.removeChildren()
         const WEAPONS = ["", "KNIFE", "PISTOL", "TOMMY"]
 
+        // add button to top of scoreboard - which will toggle
+        // the scoreboard on and off
+        let button = new Konva.Rect({
+            x: 0,
+            y: 0,
+            width: 200,
+            height: 30,
+            fill: "transparent",
+        })
+        // add label to button
+        let label = new Konva.Text({
+            x: 0,
+            y: 0,
+            text: "Hide",
+            fontSize: 16,
+            fontStyle: "bold",
+            fontFamily: 'Arial',
+            fill: 'white',
+        });
+        label.x((200 - label.getTextWidth()) / 2)
+        label.y(8)
+        this.scoreboardLayer.add(label)
+        this.scoreboardLayer.add(button)
+
+
+        const playersGroup = new Konva.Group();
         players.sort((a, b) => b.score - a.score)
         for (let i = 0; i < players.length; i++) {
             let group = new Konva.Group()
-            let Y = 35*i
+            let Y = 35*(i+1)
             let r = new Konva.Rect({
                 x: 0,
                 y: Y,
@@ -133,8 +159,13 @@ class Renderer {
                 group.opacity(0.1)
             }
 
-            this.scoreboardLayer.add(group)
+            playersGroup.add(group)
         }
+        this.scoreboardLayer.add(playersGroup)
+        button.on("click", () => {
+            playersGroup.opacity(playersGroup.opacity() === 0 ? 1 : 0)
+            label.text(playersGroup.opacity() === 0 ? "Show" : "Hide")
+        })
     }
 
     /** @type {Map} map */
