@@ -51,6 +51,39 @@
  * @prop {number} reload_cooldown
  */
 
+function HSVtoRGB(h, s, v) {
+    var r, g, b, i, f, p, q, t;
+    i = Math.floor(h * 6);
+    f = h * 6 - i;
+    p = v * (1 - s);
+    q = v * (1 - f * s);
+    t = v * (1 - (1 - f) * s);
+    switch (i % 6) {
+        case 0: r = v, g = t, b = p; break;
+        case 1: r = q, g = v, b = p; break;
+        case 2: r = p, g = v, b = t; break;
+        case 3: r = p, g = q, b = v; break;
+        case 4: r = t, g = p, b = v; break;
+        case 5: r = v, g = p, b = q; break;
+    }
+    return {
+        r: Math.round(r * 255),
+        g: Math.round(g * 255),
+        b: Math.round(b * 255)
+    };
+}
+
+let PLAYER_COLORS = [];
+for (let i = 0; i < 15; i++) {
+    let h = (i * 0.618033988749895) % 1;
+    let s = 1;
+    let v = Math.sqrt(1.0 - (i * 0.618033988749895) % 0.5);
+    let rgb = HSVtoRGB(h, s, v);
+    PLAYER_COLORS.push(`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`);
+}
+
+console.log(PLAYER_COLORS)
+
 class Renderer {
     constructor() {
         var width = window.innerWidth;
@@ -112,6 +145,7 @@ class Renderer {
         for (let i = 0; i < players.length; i++) {
             let group = new Konva.Group()
             let Y = 35*(i+1)
+            const color = PLAYER_COLORS[players[i].id % PLAYER_COLORS.length]
             let r = new Konva.Rect({
                 x: 0,
                 y: Y,
@@ -121,8 +155,17 @@ class Renderer {
             })
             group.add(r)
 
-            let name = new Konva.Text({
+            // add small circle next to player name with player color
+            let circle = new Konva.Circle({
                 x: 5,
+                y: Y+15,
+                radius: 5,
+                fill: color,
+            })
+            group.add(circle)
+
+            let name = new Konva.Text({
+                x: 10,
                 y: Y+3,
                 text: players[i].name,
                 fontSize: 16,
@@ -146,7 +189,7 @@ class Renderer {
             group.add(score)
 
             let hp = new Konva.Text({
-                x: 5,
+                x: 10,
                 y: Y+19,
                 text: players[i].health + " HP, " + WEAPONS[players[i].weapon],
                 fontSize: 10,
@@ -194,10 +237,12 @@ class Renderer {
     getPlayerLayer(player) {
         if (!this.playerLayers.hasOwnProperty(player.id)) {
             let group = new Konva.Group()
+            const color = PLAYER_COLORS[player.id % PLAYER_COLORS.length]
             let circle = new Konva.Circle({
                 x: 0, y: 0, radius: 5,
                 stroke: "white",
-                fill: "black",
+                strokeWidth: 1,
+                fill: color,
             })
 
             let name = new Konva.Text({
