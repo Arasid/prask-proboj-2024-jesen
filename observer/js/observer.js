@@ -23,28 +23,6 @@ document.getElementById("js-pause").addEventListener("click", (e) => {
     game.stopPlayback()
 })
 
-// on mouse drag
-document.addEventListener("mousedown", (e) => {
-    if (game.playing) {
-        return
-    }
-    let x = e.clientX
-    let y = e.clientY
-    document.addEventListener("mousemove", onMouseMove)
-    document.addEventListener("mouseup", onMouseUp)
-
-    function onMouseMove(e) {
-        game.renderer.pan(e.clientX - x, e.clientY - y)
-        x = e.clientX
-        y = e.clientY
-    }
-
-    function onMouseUp() {
-        document.removeEventListener("mousemove", onMouseMove)
-        document.removeEventListener("mouseup", onMouseUp)
-    }
-})
-
 // on mouse wheel, zoom in and out
 document.addEventListener("wheel", (e) => {
     if (game.playing) {
@@ -54,6 +32,34 @@ document.addEventListener("wheel", (e) => {
         game.renderer.zoom(0.9)
     } else {
         game.renderer.zoom(1.1)
+    }
+})
+
+// zoom on touch screen
+document.addEventListener("touchstart", (e) => {
+    if (game.playing) {
+        return
+    }
+    if (e.touches.length == 2) {
+        game.renderer.startZoom(e.touches)
+    }
+})
+
+document.addEventListener("touchmove", (e) => {
+    if (game.playing) {
+        return
+    }
+    if (e.touches.length == 2) {
+        game.renderer.zoomTouch(e.touches)
+    }
+})
+
+document.addEventListener("touchend", (e) => {
+    if (game.playing) {
+        return
+    }
+    if (e.touches.length == 1) {
+        game.renderer.endZoom()
     }
 })
 

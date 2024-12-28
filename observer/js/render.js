@@ -94,7 +94,7 @@ class Renderer {
         })
         this.playerLayers = {}
         this.playerTweens = {}
-        this.mapLayer = new Konva.Layer()
+        this.mapLayer = new Konva.Layer({ draggable: true })
         this.scoreboardLayer = new Konva.Layer()
         this.scoreboardLayer.x(width - 205)
         this.scoreboardLayer.y(5)
@@ -400,6 +400,27 @@ class Renderer {
         let s = this.mapLayer.scaleX() * factor
         this.mapLayer.scaleX(s)
         this.mapLayer.scaleY(s)
+    }
+
+    startZoom(touches) {
+        this.startDistance = Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY)
+    }
+
+    zoomTouch(touches) {
+        let distance = Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY)
+        let factor = distance / this.startDistance
+        // slow down zooming
+        factor = Math.pow(factor, 0.1)
+        // dont allow too small a map, only so that we will see the main circle
+        const k = 0.2;
+        if (this.mapLayer.scaleX() * factor < k) {
+            factor = k / this.mapLayer.scaleX()
+        }
+        this.zoom(factor)
+    }
+
+    endZoom() {
+        this.startDistance = null
     }
 
     /** @type {Frame} frame */
