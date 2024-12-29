@@ -398,6 +398,18 @@ class Renderer {
                 });
                 this.itemGroup.add(text)
             }
+            // add labels with coordinated, to 3 decimal places
+            let label = new Konva.Text({
+                x: item.x + 6,
+                y: item.y - 4,
+                text: `(${item.x.toFixed(3)}, ${item.y.toFixed(3)})`,
+                fontSize: 8,
+                fontStyle: "bold",
+                fontFamily: 'Arial',
+                fill: 'white',
+                opacity: 0.25,
+            });
+            this.itemGroup.add(label)
             this.itemGroup.add(i)
         }
     }
