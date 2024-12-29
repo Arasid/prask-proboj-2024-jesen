@@ -296,7 +296,18 @@ class Renderer {
                 fontFamily: 'Arial',
                 fill: 'white',
             });
-            name.x(name.getTextWidth() / -2)
+            const nameX = name.getTextWidth() / -2
+            name.x(nameX)
+            group._coords = new Konva.Text({
+                x: nameX,
+                y: -26,
+                text: `[${player.x.toFixed(3)}, ${player.y.toFixed(3)}]`,
+                fontSize: 8,
+                fontStyle: "bold",
+                fontFamily: 'Arial',
+                fill: 'white',
+                opacity: 0.25,
+            });
 
             let healthbar_box = new Konva.Rect({
                 width: 30,
@@ -319,6 +330,7 @@ class Renderer {
             group.add(healthbar_box)
             group.add(circle)
             group.add(name)
+            group.add(group._coords)
 
             // let capImg = new Image();
             // capImg.onload = function () {
@@ -352,6 +364,7 @@ class Renderer {
         }
 
         layer._healthbar.width(30 * (player.health / 100))
+        layer._coords.text(`[${player.x.toFixed(3)}, ${player.y.toFixed(3)}]`)
 
         if (this.playerTweens.hasOwnProperty(player.name)) {
             this.playerTweens[player.name].finish()
