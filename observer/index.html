@@ -67,11 +67,20 @@
             height: 100vh;
             background: oklch(25% 0 200);
         }
+
+      #js-coords {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 0.5rem;
+        color: white;
+      }
     </style>
 </head>
 <body>
 
 <div id="js-canvas"></div>
+<div id="js-coords" class="control"></div>
 
 <div class="controls">
     <div class="btn" id="js-play">

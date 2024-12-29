@@ -108,6 +108,15 @@ class Renderer {
         this.canvas.add(this.mapLayer)
         this.canvas.add(this.scoreboardLayer)
         this.howlers = {}
+        // on cursor show coordinates
+        this.mapLayer.on("mousemove", (e) => {
+            let x = e.evt.layerX
+            let y = e.evt.layerY
+            let s = this.mapLayer.scaleX()
+            x = (x - this.mapLayer.x()) / s
+            y = (y - this.mapLayer.y()) / s
+            document.getElementById("js-coords").innerText = `(${x.toFixed(3)}, ${y.toFixed(3)})`
+        })
     }
 
     /** @type {Player[]} players */
