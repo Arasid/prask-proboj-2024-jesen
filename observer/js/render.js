@@ -286,6 +286,12 @@ class Renderer {
                 strokeWidth: 1,
                 fill: color,
             })
+            group._weaponRange = new Konva.Circle({
+                x: 0, y: 0, radius: 0,
+                fill: color,
+                strokeWidth: 1,
+                opacity: 0.1,
+            });
 
             let name = new Konva.Text({
                 x: 0,
@@ -331,6 +337,7 @@ class Renderer {
             group.add(circle)
             group.add(name)
             group.add(group._coords)
+            group.add(group._weaponRange)
 
             // let capImg = new Image();
             // capImg.onload = function () {
@@ -365,6 +372,16 @@ class Renderer {
 
         layer._healthbar.width(30 * (player.health / 100))
         layer._coords.text(`[${player.x.toFixed(3)}, ${player.y.toFixed(3)}]`)
+        const range = [0, 10, 100, 200][player.weapon];
+        layer._weaponRange.radius(range);
+        if (player.reload_cooldown > 0) {
+            layer._weaponRange.opacity(0.05)
+        } else {
+            layer._weaponRange.opacity(0.1)
+        }
+        if (player.health < 0) {
+            layer._weaponRange.opacity(0)
+        }
 
         if (this.playerTweens.hasOwnProperty(player.name)) {
             this.playerTweens[player.name].finish()
